@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["Danbka523"]
   spec.email = ["gordonanet12@gmail.com"]
 
-  spec.summary = "TODO: Write a short summary, because RubyGems requires one."
+  spec.summary = "Ruby layer for CBR API"
   #spec.description = "TODO: Write a longer description or delete this line."
   spec.homepage = "https://github.com/Danbka523/currency_converter"
   spec.license = "MIT"
@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/Danbka523/currency_converter"
-  spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
+  spec.metadata["changelog_uri"] = "https://github.com/Danbka523/currency_converter/blob/master/CHANGELOG.md"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
