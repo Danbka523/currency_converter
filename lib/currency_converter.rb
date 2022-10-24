@@ -1,59 +1,83 @@
-# frozen_string_literal: true
+# frozen_string_literal: false
 
+require 'open-uri'
+require 'nokogiri'
 require_relative "currency_converter/version"
-require "nokogiri"
-require "open-uri"
-require "benchmark"
-$address7 = 'https://cbr.ru/scripts/XML_News.asp'
-$address8 = 'https://cbr.ru/scripts/XML_bic.asp?'
-$address9 = 'https://cbr.ru/scripts/xml_swap.asp?'
 
+$daily_req='http://www.cbr.ru/scripts/XML_daily.asp?date_req='
+$dynamic_cur_req="http://www.cbr.ru/scripts/XML_dynamic.asp?"
+$cur_code_req='https://cbr.ru/scripts/XML_val.asp?d=0'
+$rem_req="http://www.cbr.ru/scripts/XML_ostat.asp?"
+
+using Nokogiri
 module CurrencyConverter
-  class Error < StandardError; end
-  def news_ex_7()
-    doc7 = Nokogiri::XML(URI.open($address7))
-    root7 = doc7.root
-    root7.children.each do |child|
-    p "Item ID = "+child.attr('ID')+" Дата: "+child.children[0].content
-    p "URL: "+child.children[1].content
-    p "Название: "+child.children[2].content
-    p "————————————————————————"
+
+  class InvalidDate < StandardError; end
+  class InvalidCurrency < StandardError; end
+  
+
+  def get_daily_cur(date="",currency="")
+    
+    code=get_code(currency)
+    throw InvalidCurrency if code==''
+
+    doc=Nokogiri::XML(URI.open($daily_req+date))
+    #res=''
+    root=doc.root
+    
+    throw InvalidDate if root.children.text=="Error in parameters"
+
+    root.children.each do |child| 
+      p child.xpath('Name').text+' '+child.xpath("Nominal").text+' '+child.xpath("Value").text+';'
     end
+    #p res
+    #res
   end
 
-  def bic_ex8()
-    doc8 = Nokogiri::XML(URI.open($address8))
-    root8 = doc8.root
-    root8.children.each do |child|
-      p "Record ID = "+child.attr('ID')
-      p "Дата: "+child.attr('DU')
-      p "Название: "+child.first_element_child.content
-      p "BIC(код кредитной орагнизации):"+child.last_element_child.content
-      p "————————————————————————"
+  def get_dynamic_cur(date1,date2,currency)
+
+    code=get_code(currency)
+    throw InvalidCurrency if code==''
+
+    req=$dynamic_cur_req+"date_req1="+date1+"&date_req2="+date2+"&VAL_NM_RQ="+code
+    doc=Nokogiri::XML(URI.open(req))
+    #res=''
+    root=doc.root
+
+    throw InvalidDate if root.children.text=="Error in parameters"
+
+    root.children.each do |child| 
+      p child.attribute('Date').value+' '+child.xpath("Nominal").text+' '+child.xpath("Value").text+";"
     end
+   # p res
+   # res
   end
 
-  def currency_swap_ex9(date_req19,date_req29)
-    #if(!(validate_date(date_req19) && validate_date(date_req29)))
-    # throw Error
-    #end
-    doc9 = Nokogiri::XML(URI.open($address9+"date_req1="+date_req19+"&"+"date_req2="+date_req29))
-    root9 = doc9.root
-    root9.children.each do |child|
-      p "IsEuro = "+child.attr('IsEuro')
-      p "Дата покупки: "+child.children[0].content
-      p "Дата продажи: "+child.children[1].content
-      p child.children[2].content
-      p child.children[3].content
-      p child.children[4].content
-      p child.children[5].content
-      p "————————————————————————"
+  def get_code(currency)
+    temp=currency.downcase
+    res=''
+    doc=Nokogiri::XML(URI.open($cur_code_req))
+    root=doc.root
+    root.children.each do |child|
+      res=child.attribute('ID').value if child.xpath('Name').text.downcase==temp
+    end
+    res
+  end
+
+  def get_remains(date1, date2)
+    req=$dynamic_cur_req+"date_req1="+date1+"&date_req2="+date2
+    doc=Nokogiri::XML(URI.open(req))
+    #res=''
+    root=doc.root
+    
+    throw InvalidDate if root.children.text=="Error in parameters"
+    p root
+    root.children.each do |child| 
+      p child.attribute('Date').value+' '+child.xpath("InRussia").text+' '+child.xpath("InMoscow").text+";"
     end
   end
 
 end
 
 include CurrencyConverter
-#news_ex_7()
-#bic_ex8()
-#currency_swap_ex9("01/12/2002","06/12/2002")
+get_remains("01/06/2001","05/06/2001")
