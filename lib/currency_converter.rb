@@ -131,9 +131,6 @@ module CurrencyConverter
   end
 
   def currency_swap(date_req19,date_req29)
-    #if(!(validate_date(date_req19) && validate_date(date_req29)))
-    # throw Error
-    #end
     doc9 = Nokogiri::XML(URI.open($currencyswap_req+"date_req1="+date_req19+"&"+"date_req2="+date_req29))
     root9 = doc9.root
     throw InvalidDate if root9.children.text=="Error in parameters"
@@ -150,9 +147,6 @@ module CurrencyConverter
   end
 
   def coinsbase(date_req110, date_req210)
-    #if(!(validate_date(date_req110) && validate_date(date_req210)))
-    # throw Error
-    #end
     doc10 = Nokogiri::XML(URI.open($coinsbase_req+"date_req1="+date_req110+"&"+"date_req2="+date_req210))
     root10 = doc10.root
     throw InvalidDate if root10.children.text=="Error in parameters"
@@ -170,7 +164,7 @@ module CurrencyConverter
   def get_metal_info(date_req1,date_req2,name_of_metal="")
     code_metal = codes_of_metals(name_of_metal.downcase)
     root = Nokogiri::XML(URI.open($metal_req+"date_req1="+date_req1+"&"+"date_req2="+date_req2)).root 
-    throw InvalidDate if root.children.text=="Error in parameters"
+    throw InvalidDate if root.children.text=="DataNotFound"
     root.children.each do |child|
    if  code_metal==nil || child.attribute('Code').value==code_metal
        puts "\n"+child.attribute('Date').value + " Code = " + child.attribute('Code').value  
@@ -203,9 +197,9 @@ module CurrencyConverter
 
   def get_credit_market_info(date_req1,date_req2)
     root = Nokogiri::XML(URI.open($credit_req+"date_req1="+date_req1+"&"+"date_req2="+date_req2)).root 
-    throw InvalidDate if root.children.text=="Error in parameters"
+    throw InvalidDate if root.children.text=="DataNotFound"
     root.children.each do |child|
-      puts "Date: "+child.attribute('Date').content+" Code: "+child.attribute('Code').content
+      puts "Date: "+child.attribute('Date').value+" Code: "+child.attribute('Code').content
       puts "1 day: "+ child.children[0].content
       puts "2 to 7 days: "+ child.children[1].content
       puts "8 to 30 days: "+ child.children[2].content
@@ -216,16 +210,3 @@ module CurrencyConverter
     end
   end
 end
-
-include CurrencyConverter
-#get_daily_cur("21/12/2012","доллар сша")
-#get_daily_cur("fdfd2","1")
-#news()
-#bic()
-#currency_swap("01/12/2006","01/12/2008")
-#coinsbase("01/12/2005","01/12/2006")
-#get_remains("01/06/2001","05/06/2001")
-#get_metal_info("01/10/2022","13/10/2022","Silver")
-#get_metal_info("01/10/2022","13/10/2022")
-#get_deposit_rates("01/07/2001","13/07/2001")
-#get_credit_market_info("01/07/2001","13/07/2001")
