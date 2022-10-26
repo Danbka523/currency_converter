@@ -183,7 +183,7 @@ module CurrencyConverter
    if name_of_metal.empty? 
     return nil
    end
-   hash= {"золото"=>"1","серебро"=>"2","платина"=>"3","палладий"=>"4"}
+   hash= {"gold"=>"1","silver"=>"2","platinum"=>"3","palladium"=>"4"}
    if  hash.key?(name_of_metal) 
     return hash[name_of_metal]
    end
@@ -205,14 +205,14 @@ module CurrencyConverter
     root = Nokogiri::XML(URI.open($credit_req+"date_req1="+date_req1+"&"+"date_req2="+date_req2)).root 
     throw InvalidDate if root.children.text=="Error in parameters"
     root.children.each do |child|
-      puts "Дата: "+child.attribute('Date').content+" Код: "+child.attribute('Code').content
-      puts "1 день: "+ child.children[0].content
-      puts "от 2 до 7 дн: "+ child.children[1].content
-      puts "от 8 до 30 дн: "+ child.children[2].content
-      puts "от 31 до 90 дн: "+ child.children[3].content
-      puts "от 91 до 180 дн: "+ child.children[4].content
-      puts "от 181 до 1 года: "+ child.children[5].content
-      puts "(в процентах годовых)"
+      puts "Date: "+child.attribute('Date').content+" Code: "+child.attribute('Code').content
+      puts "1 day: "+ child.children[0].content
+      puts "2 to 7 days: "+ child.children[1].content
+      puts "8 to 30 days: "+ child.children[2].content
+      puts "31 to 90 days: "+ child.children[3].content
+      puts "91 to 180 days: "+ child.children[4].content
+      puts "181 to 1 year: "+ child.children[5].content
+      puts "(in percentage per annum)"
     end
   end
 end
@@ -225,7 +225,7 @@ include CurrencyConverter
 #currency_swap("01/12/2006","01/12/2008")
 #coinsbase("01/12/2005","01/12/2006")
 #get_remains("01/06/2001","05/06/2001")
-#get_metal_info("01/10/2022","13/10/2022","ПаЛЛаДиЙ")
+#get_metal_info("01/10/2022","13/10/2022","Silver")
 #get_metal_info("01/10/2022","13/10/2022")
 #get_deposit_rates("01/07/2001","13/07/2001")
 #get_credit_market_info("01/07/2001","13/07/2001")
