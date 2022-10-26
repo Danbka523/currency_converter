@@ -164,7 +164,7 @@ module CurrencyConverter
   def get_metal_info(date_req1,date_req2,name_of_metal="")
     code_metal = codes_of_metals(name_of_metal.downcase)
     root = Nokogiri::XML(URI.open($metal_req+"date_req1="+date_req1+"&"+"date_req2="+date_req2)).root 
-    throw InvalidDate if root.children.text=="DataNotFound"
+    throw InvalidDate if root.children.text=="Error in date format" || root.attribute('ToDate').value==''
     root.children.each do |child|
    if  code_metal==nil || child.attribute('Code').value==code_metal
        puts "\n"+child.attribute('Date').value + " Code = " + child.attribute('Code').value  
@@ -196,7 +196,7 @@ module CurrencyConverter
   end
 
   def get_credit_market_info(date_req1,date_req2)
-    root = Nokogiri::XML(URI.open($credit_req+"date_req1="+date_req1+"&"+"date_req2="+date_req2)).root 
+    root = Nokogiri::XML(URI.open($credit_req+"date_req1="+date_req1+"&"+"date_req2="+date_req2)).root
     throw InvalidDate if root.children.text=="DataNotFound"
     root.children.each do |child|
       puts "Date: "+child.attribute('Date').value+" Code: "+child.attribute('Code').content
@@ -209,4 +209,5 @@ module CurrencyConverter
       puts "(in percentage per annum)"
     end
   end
+
 end

@@ -36,6 +36,7 @@ class TestCurrencyConverter < Minitest::Test
   def test_get_deposit_rates
     assert_throws (CurrencyConverter::InvalidDate){get_deposit_rates("86389","2828")}
     assert_throws (CurrencyConverter::InvalidDate){get_deposit_rates("01/10/2001","133/10/2001")}
+    assert_throws (CurrencyConverter::InvalidDate){get_deposit_rates("","13/10/2001")}
   end
 
   def test_get_metal_info
@@ -49,7 +50,5 @@ class TestCurrencyConverter < Minitest::Test
   assert_throws (CurrencyConverter::InvalidDate){get_credit_market_info("12/02/2013","")}
   assert_throws (CurrencyConverter::InvalidDate){get_credit_market_info("02/12/1900","15/12/2001")}
   end
-
-  
 
 end
