@@ -29,4 +29,11 @@ class TestCurrencyConverter < Minitest::Test
     assert_throws (CurrencyConverter::InvalidDate){get_remains("2222/02/11","1221321312")}
   end
 
+  def test_coinsbase
+    assert_throws (CurrencyConverter::InvalidDate){coinsbase("22222531","8965")}
+  end
+
+  def test_get_deposit_rates
+    assert_throws (CurrencyConverter::InvalidDate){get_deposit_rates("86389","2828")}
+  end
 end
