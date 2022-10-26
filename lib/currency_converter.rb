@@ -34,9 +34,9 @@ module CurrencyConverter
     doc=Nokogiri::XML(URI.open($daily_req+date))
     res=''
     root=doc.root
-    
+
     throw InvalidDate if root.children.text=="\nError in parameters\n"
-    
+
 
     if currency!=""
       root.children.each do |child|
@@ -47,7 +47,7 @@ module CurrencyConverter
            res
         end
       end
-    else 
+    else
      root.children.each do |child|
         value=child.xpath('Name').text+';'+child.xpath("Nominal").text+';'+child.xpath("Value").text+';'
         p value
@@ -133,7 +133,7 @@ module CurrencyConverter
   def currency_swap(date_req19,date_req29)
     doc9 = Nokogiri::XML(URI.open($currencyswap_req+"date_req1="+date_req19+"&"+"date_req2="+date_req29))
     root9 = doc9.root
-    throw InvalidDate if root9.children.text=="Error in parameters"
+    throw InvalidDate if root9.children.text==""
     root9.children.each do |child|
       p "IsEuro = "+child.attr('IsEuro')
       p "Buy date: "+child.children[0].content
@@ -163,34 +163,34 @@ module CurrencyConverter
 
   def get_metal_info(date_req1,date_req2,name_of_metal="")
     code_metal = codes_of_metals(name_of_metal.downcase)
-    root = Nokogiri::XML(URI.open($metal_req+"date_req1="+date_req1+"&"+"date_req2="+date_req2)).root 
+    root = Nokogiri::XML(URI.open($metal_req+"date_req1="+date_req1+"&"+"date_req2="+date_req2)).root
     throw InvalidDate if root.children.text=="Error in date format" || root.attribute('ToDate').value==''
     root.children.each do |child|
    if  code_metal==nil || child.attribute('Code').value==code_metal
-       puts "\n"+child.attribute('Date').value + " Code = " + child.attribute('Code').value  
+       puts "\n"+child.attribute('Date').value + " Code = " + child.attribute('Code').value
       puts "BUY:"+child.first_element_child.content + " RUB\n" + "SELL:"+child.last_element_child.content + " RUB\n"
     end
-   end 
+   end
   end
 
   def codes_of_metals(name_of_metal)
-   if name_of_metal.empty? 
+   if name_of_metal.empty?
     return nil
    end
    hash= {"gold"=>"1","silver"=>"2","platinum"=>"3","palladium"=>"4"}
-   if  hash.key?(name_of_metal) 
+   if  hash.key?(name_of_metal)
     return hash[name_of_metal]
    end
    throw InvalidMetal
   end
 
-  def get_deposit_rates(date_req1,date_req2) 
-    root = Nokogiri::XML(URI.open($deposit_rates+"date_req1="+date_req1+"&"+"date_req2="+date_req2)).root 
+  def get_deposit_rates(date_req1,date_req2)
+    root = Nokogiri::XML(URI.open($deposit_rates+"date_req1="+date_req1+"&"+"date_req2="+date_req2)).root
     throw InvalidDate if root.children.text=="Error in parameters"
     root.children.each do |child|
     puts "\n" + child.attribute('Date').value + "\n"
-    child.children.each do  |el| 
-    puts el.name + ": " + el.text+"%" 
+    child.children.each do  |el|
+    puts el.name + ": " + el.text+"%"
       end
     end
   end
@@ -211,3 +211,12 @@ module CurrencyConverter
   end
 
 end
+
+include CurrencyConverter
+
+#news()
+#bic()
+#coinsbase("10/05/2005","11/06/2006")
+#currency_swap("10/11/2010","08/05/2011")
+#get_deposit_rates("15/08/2015","16/09/2018")
+#get_credit_market_info("15/08/2015","16/09/2018")
