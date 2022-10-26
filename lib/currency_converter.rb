@@ -25,21 +25,36 @@ module CurrencyConverter
 
 
   def get_daily_cur(date="",currency="")
-
-    code=get_code(currency)
-    throw InvalidCurrency if code==''
+    code=""
+    if currency!=""
+     code=get_code(currency)
+     throw InvalidCurrency if code==''
+    end
 
     doc=Nokogiri::XML(URI.open($daily_req+date))
-    #res=''
+    res=''
     root=doc.root
+    
+    throw InvalidDate if root.children.text=="\nError in parameters\n"
+    
 
-    throw InvalidDate if root.children.text=="Error in parameters"
-
-    root.children.each do |child|
-      p child.xpath('Name').text+' '+child.xpath("Nominal").text+' '+child.xpath("Value").text+';'
+    if currency!=""
+      root.children.each do |child|
+        if child.attribute("ID").value==code
+          value=child.xpath('Name').text+';'+child.xpath("Nominal").text+';'+child.xpath("Value").text+';'
+          p value
+           res+=value
+           res
+        end
+      end
+    else 
+     root.children.each do |child|
+        value=child.xpath('Name').text+';'+child.xpath("Nominal").text+';'+child.xpath("Value").text+';'
+        p value
+        res+=value
+     end
     end
-    #p res
-    #res
+    res
   end
 
   def get_dynamic_cur(date1,date2,currency)
@@ -49,16 +64,18 @@ module CurrencyConverter
 
     req=$dynamic_cur_req+"date_req1="+date1+"&date_req2="+date2+"&VAL_NM_RQ="+code
     doc=Nokogiri::XML(URI.open(req))
-    #res=''
+    res=''
     root=doc.root
 
     throw InvalidDate if root.children.text=="Error in parameters"
 
     root.children.each do |child|
-      p child.attribute('Date').value+' '+child.xpath("Nominal").text+' '+child.xpath("Value").text+";"
+      value=child.attribute('Date').value+';'+child.xpath("Nominal").text+';'+child.xpath("Value").text+";"
+      res+=value
+      p value
     end
-   # p res
-   # res
+
+    res
   end
 
   def get_code(currency)
@@ -75,14 +92,17 @@ module CurrencyConverter
   def get_remains(date1, date2)
     req=$dynamic_cur_req+"date_req1="+date1+"&date_req2="+date2
     doc=Nokogiri::XML(URI.open(req))
-    #res=''
+    res=''
     root=doc.root
 
     throw InvalidDate if root.children.text=="Error in parameters"
-    p root
+
     root.children.each do |child|
-      p child.attribute('Date').value+' '+child.xpath("InRussia").text+' '+child.xpath("InMoscow").text+";"
+      value=child.attribute('Date').value+' '+child.xpath("InRussia").text+' '+child.xpath("InMoscow").text+";"
+      p value
+      res+=value
     end
+    res
   end
 
   def news()
@@ -148,15 +168,15 @@ module CurrencyConverter
   end
 
   def get_metal_info(date_req1,date_req2,name_of_metal="")
-  code_metal = codes_of_metals(name_of_metal.downcase)
-  root = Nokogiri::XML(URI.open($metal_req+"date_req1="+date_req1+"&"+"date_req2="+date_req2)).root 
-  throw InvalidDate if root.children.text=="Error in parameters"
-  root.children.each do |child|
-  if  code_metal==nil || child.attribute('Code').value==code_metal
-  puts "\n"+child.attribute('Date').value + " Code = " + child.attribute('Code').value  
-  puts "BUY:"+child.first_element_child.content + " RUB\n" + "SELL:"+child.last_element_child.content + " RUB\n"
-  end
-  end 
+    code_metal = codes_of_metals(name_of_metal.downcase)
+    root = Nokogiri::XML(URI.open($metal_req+"date_req1="+date_req1+"&"+"date_req2="+date_req2)).root 
+    throw InvalidDate if root.children.text=="Error in parameters"
+    root.children.each do |child|
+   if  code_metal==nil || child.attribute('Code').value==code_metal
+       puts "\n"+child.attribute('Date').value + " Code = " + child.attribute('Code').value  
+      puts "BUY:"+child.first_element_child.content + " RUB\n" + "SELL:"+child.last_element_child.content + " RUB\n"
+    end
+   end 
   end
 
   def codes_of_metals(name_of_metal)
@@ -165,39 +185,41 @@ module CurrencyConverter
    end
    hash= {"золото"=>"1","серебро"=>"2","платина"=>"3","палладий"=>"4"}
    if  hash.key?(name_of_metal) 
-   return hash[name_of_metal]
+    return hash[name_of_metal]
    end
    throw InvalidMetal
   end
 
   def get_deposit_rates(date_req1,date_req2) 
-  root = Nokogiri::XML(URI.open($deposit_rates+"date_req1="+date_req1+"&"+"date_req2="+date_req2)).root 
-  throw InvalidDate if root.children.text=="Error in parameters"
-  root.children.each do |child|
-  puts "\n" + child.attribute('Date').value + "\n"
-  child.children.each do  |el| 
-  puts el.name + ": " + el.text+"%" 
-  end
-  end
+    root = Nokogiri::XML(URI.open($deposit_rates+"date_req1="+date_req1+"&"+"date_req2="+date_req2)).root 
+    throw InvalidDate if root.children.text=="Error in parameters"
+    root.children.each do |child|
+    puts "\n" + child.attribute('Date').value + "\n"
+    child.children.each do  |el| 
+    puts el.name + ": " + el.text+"%" 
+      end
+    end
   end
 
   def get_credit_market_info(date_req1,date_req2)
-  root = Nokogiri::XML(URI.open($credit_req+"date_req1="+date_req1+"&"+"date_req2="+date_req2)).root 
-  throw InvalidDate if root.children.text=="Error in parameters"
-  root.children.each do |child|
-  puts "Дата: "+child.attribute('Date').content+" Код: "+child.attribute('Code').content
-  puts "1 день: "+ child.children[0].content
-  puts "от 2 до 7 дн: "+ child.children[1].content
-  puts "от 8 до 30 дн: "+ child.children[2].content
-  puts "от 31 до 90 дн: "+ child.children[3].content
-  puts "от 91 до 180 дн: "+ child.children[4].content
-  puts "от 181 до 1 года: "+ child.children[5].content
-  puts "(в процентах годовых)"
-  end
+    root = Nokogiri::XML(URI.open($credit_req+"date_req1="+date_req1+"&"+"date_req2="+date_req2)).root 
+    throw InvalidDate if root.children.text=="Error in parameters"
+    root.children.each do |child|
+      puts "Дата: "+child.attribute('Date').content+" Код: "+child.attribute('Code').content
+      puts "1 день: "+ child.children[0].content
+      puts "от 2 до 7 дн: "+ child.children[1].content
+      puts "от 8 до 30 дн: "+ child.children[2].content
+      puts "от 31 до 90 дн: "+ child.children[3].content
+      puts "от 91 до 180 дн: "+ child.children[4].content
+      puts "от 181 до 1 года: "+ child.children[5].content
+      puts "(в процентах годовых)"
+    end
   end
 end
 
 include CurrencyConverter
+#get_daily_cur("21/12/2012","доллар сша")
+#get_daily_cur("fdfd2","1")
 #news()
 #bic()
 #currency_swap("01/12/2006","01/12/2008")
