@@ -210,6 +210,21 @@ module CurrencyConverter
     end
   end
 
+  def blist()
+    doc11 = Nokogiri::XML(URI.open($black_list))
+    root11 = doc11.root
+    throw InvalidDate if root11.children.text=="Error in parameters"
+    root11.children.each do |child|
+      p "DT = "+child.children[0].content
+      p "Name: "+child.children[1].content
+      p "INN: "+child.children[2].content
+      p "ADDR: "+child.children[3].content
+      p "Site: "+child.children[4].content
+      p "Sign: "+child.children[5].content
+      p "Closed: "+child.children[6].content
+      p "————————————————————————"
+     end
+    end
 end
 
 include CurrencyConverter
