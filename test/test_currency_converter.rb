@@ -45,5 +45,9 @@ class TestCurrencyConverter < Minitest::Test
     assert_throws (CurrencyConverter::InvalidDate){get_metal_info("12/10/2022","2000/10/2022")}
   end
 
+  def test_currency_swap
+   assert_throws (CurrencyConverter::InvalidDate){currency_swap("45","1515")}
+  end
+
 
 end
