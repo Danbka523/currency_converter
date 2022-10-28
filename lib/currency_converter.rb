@@ -227,11 +227,3 @@ module CurrencyConverter
     end
 end
 
-include CurrencyConverter
-
-#news()
-#bic()
-#coinsbase("10/05/2005","11/06/2006")
-#currency_swap("10/11/2010","08/05/2011")
-#get_deposit_rates("15/08/2015","16/09/2018")
-#get_credit_market_info("15/08/2015","16/09/2018")
