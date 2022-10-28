@@ -14,7 +14,7 @@ Specifically, the following APIs are used: \
 8."List of credit institutions" API \
 9."Swap buy-sell overnight" API \
 10."Release Prices of the Bank of Russia for Investment Coins" API \
-11."List of companies with identified signs of illegal activity in the financial market" API \
+11."List of companies with identified signs of illegal activity in the financial market" API 
 
 ## Installation
 
