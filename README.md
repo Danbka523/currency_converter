@@ -29,19 +29,19 @@ If bundler is not being used to manage dependencies, install the gem by executin
 ## Usage
 
 To use the gem's functionality, you need to write the name of the method and, as parameters, specify the time period that is checked for correctness.
-In some methods, for example, "biс" , "news" , "blist" parameters are not needed. In the "get_daily_cur" , "get_dynamic_cur" methods you can specify the currency and in the "get_metal_info" method you can specify the name of the metal to get specific information.
-Signatures of all methods:
-1.def get_daily_cur(date="",currency="")
-2.def get_dynamic_cur(date1,date2,currency)
-3.def get_remains(date1, date2)
-4.def news()
-5.def bic()
-6.def currency_swap(date1,date2)
-7.def coinsbase(date1, date1)
-8.def get_metal_info(date1,date2,name_of_metal="")
-9.def get_deposit_rates(date1,date2)
-10.def get_credit_market_info(date1,date2)
-11.def blist()
+In some methods, for example, "biс" , "news" , "blist" parameters are not needed. In the "get_daily_cur" , "get_dynamic_cur" methods you can specify the currency and in the "get_metal_info" method you can specify the name of the metal to get specific information. \
+Signatures of all methods: \
+1.def get_daily_cur(date="",currency="") \
+2.def get_dynamic_cur(date1,date2,currency) \
+3.def get_remains(date1, date2) \
+4.def news() \
+5.def bic() \
+6.def currency_swap(date1,date2) \
+7.def coinsbase(date1, date1) \
+8.def get_metal_info(date1,date2,name_of_metal="") \
+9.def get_deposit_rates(date1,date2) \
+10.def get_credit_market_info(date1,date2) \
+11.def blist() \
 
 ## Development
 
