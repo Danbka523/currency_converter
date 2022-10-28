@@ -2,19 +2,19 @@
 
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/currency_converter`. To experiment with that code, run `bin/console` for an interactive prompt.
 
-This gem is used for parsing API of the Central Bank of the Russian Federation.
-Specifically, the following APIs are used:
-1."Foreign Currency Market" API
-2."Foreign Currency Market Dynamic" API
-3."Credit institutions balances on correspondent accounts with Bank of Russia"  API
-4."Precious metals quotations" API
-5."Interbank Credit Market" API
-6."Deposit rates in the money market" API
-7."Server news" API
-8."List of credit institutions" API
-9."Swap buy-sell overnight" API
-10."Release Prices of the Bank of Russia for Investment Coins" API
-11."List of companies with identified signs of illegal activity in the financial market" API
+This gem is used for parsing API of the Central Bank of the Russian Federation.\
+Specifically, the following APIs are used: \
+1."Foreign Currency Market" API \
+2."Foreign Currency Market Dynamic" API \
+3."Credit institutions balances on correspondent accounts with Bank of Russia"  API \
+4."Precious metals quotations" API \
+5."Interbank Credit Market" API \
+6."Deposit rates in the money market" API \
+7."Server news" API \
+8."List of credit institutions" API \
+9."Swap buy-sell overnight" API \
+10."Release Prices of the Bank of Russia for Investment Coins" API \
+11."List of companies with identified signs of illegal activity in the financial market" API \
 
 ## Installation
 
