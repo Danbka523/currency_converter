@@ -41,7 +41,7 @@ Signatures of all methods: \
 8.def get_metal_info(date1,date2,name_of_metal="") \
 9.def get_deposit_rates(date1,date2) \
 10.def get_credit_market_info(date1,date2) \
-11.def blist() \
+11.def blist()
 
 ## Development
 
